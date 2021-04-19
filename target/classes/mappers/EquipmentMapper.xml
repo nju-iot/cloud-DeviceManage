@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lot.equipment.dao.EquipmentMapper">
+    <insert id="insert" parameterType="com.lot.equipment.dao.entity.EquipmentDO">
+    insert into e_equipment (id, name, code, key, contact, phone, address, status,created_at, created_by, updated_at,updated_by)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},#{key,jdbcType=VARCHAR},#{contact,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},#{createdAt,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=INTEGER},
+        #{updatedBy,jdbcType=VARCHAR}
+      )
+    </insert>
+
+    <update id="update" parameterType="com.lot.equipment.dao.entity.EquipmentDO" statementType="PREPARED">
+        update e_equipment
+        <trim prefix="set" suffixOverrides=","
+              suffix="where id = #{id}">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="key != null">
+                key = #{key},
+            </if>
+            <if test="contact != null">
+                contact = #{contact},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </trim>
+    </update>
+
+    <select id="getById" resultType="com.lot.equipment.dao.entity.EquipmentDO">
+        SELECT * FROM e_equipment
+        where id = #{id}
+    </select>
+
+    <select id="listBy" resultType="com.lot.equipment.dao.entity.EquipmentDO">
+        SELECT * FROM e_equipment
+        where 1
+        <if test="code != null and code != ''">
+            and code =#{code}
+        </if>
+        <if test="status != null">
+            and status =#{status}
+        </if>
+        <if test="name != null and name != ''">
+            and name LIKE CONCAT( CONCAT('%',#{name}),'%')
+        </if>
+        <if test="startTime != null and endTime != ''">
+            and created_at between #{startTime} and #{endTime}
+        </if>
+        order by created_at desc
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>
